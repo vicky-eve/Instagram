@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
@@ -52,3 +53,10 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.username}'
+
+class Follow(models.Model):
+    follower = models.ForeignKey(Profile, on_delete=CASCADE, related_name='following')
+    followed = models.ForeignKey(Profile, on_delete=CASCADE, related_name='followers')
+
+    def __str__(self):
+        return f'{self.follower}Follow'
