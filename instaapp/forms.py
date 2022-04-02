@@ -16,7 +16,7 @@ class SignupForm(UserCreationForm):
         help_texts = {'username':None, 'password2':None}
 User._meta.get_field('email')._unique = True
 
-class NewsletterForm(forms.Form):
+class NewsLetterForm(forms.Form):
     username = forms.CharField(label='User_ame',max_length=30)
     email = forms.EmailField(label='Email')
 
