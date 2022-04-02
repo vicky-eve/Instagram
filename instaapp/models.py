@@ -1,4 +1,3 @@
-from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
@@ -55,8 +54,8 @@ class Profile(models.Model):
         return f'{self.user.username}'
 
 class Follow(models.Model):
-    follower = models.ForeignKey(Profile, on_delete=CASCADE, related_name='following')
-    followed = models.ForeignKey(Profile, on_delete=CASCADE, related_name='followers')
+    follower = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='following')
+    followed = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='followers')
 
     def __str__(self):
         return f'{self.follower}Follow'
@@ -66,3 +65,9 @@ class Comments(models.Model):
     image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, related_name='comments')
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
     date_comment_posted = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-date_comment_posted"]
+
+    def __str__(self):
+        return f'{self.user.name}Image'
