@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404,HttpResponseRedirect
 from .forms import NewsLetterForm, SignupForm
+from .models import NewsLetterRecipients
 
 # Create your views here.
-def news(request):
+def news_today(request):
     if request.method == 'POST':
         form = NewsLetterForm(request.POST)
         if form.is_valid():
@@ -14,7 +15,7 @@ def news(request):
             HttpResponseRedirect('news')
     else:
         form = NewsLetterForm()
-    return render(request, 'news.html', {"date": date,"news":news,"letterForm":form})
+    return render(request, 'news.html', {"letterForm":form})
 
 
 def sign_up(request):

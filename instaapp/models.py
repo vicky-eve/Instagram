@@ -71,3 +71,7 @@ class Comments(models.Model):
 
     def __str__(self):
         return f'{self.user.name}Image'
+
+class NewsLetterRecipients(models.Model):
+    name = models.CharField(max_length = 30)
+    email = models.EmailField()
