@@ -60,3 +60,9 @@ class Follow(models.Model):
 
     def __str__(self):
         return f'{self.follower}Follow'
+
+class Comments(models.Model):
+    comment = models.TextField(max_length = 500)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, related_name='comments')
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
+    date_comment_posted = models.DateTimeField(auto_now_add=True)
