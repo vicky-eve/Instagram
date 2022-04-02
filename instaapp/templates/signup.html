@@ -1,0 +1,15 @@
+{%extends 'base.html'%} 
+
+<!-- Some content here-->
+
+<!-- Looping through news end   -->
+<div class="container-fluid">
+
+  <form  action="{%url 'sign_up'%}" method="post">
+    {%csrf_token%}
+
+    {% bootstrap_form letterForm layout='inline' %}
+    <input type="submit" value="SignUp">
+  </form>
+
+</div>
