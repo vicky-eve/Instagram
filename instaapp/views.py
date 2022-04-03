@@ -1,9 +1,11 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, Http404,HttpResponseRedirect
-from .forms import NewsLetterForm, SignupForm
-from .models import NewsLetterRecipients
+from .forms import NewsLetterForm, SignupForm, UploadPhotoForm
+from .models import Comments, NewsLetterRecipients, Image
 from .email import send_welcome_email
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 # Create your views here.
 def news_today(request):
@@ -21,7 +23,7 @@ def news_today(request):
     return render(request, 'news.html', {"letterForm":form})
 
 
-def register(request):
+def signup(request):
     if request.user.is_authenticated:
         return redirect('home')
     if request.method=="POST":
@@ -34,5 +36,24 @@ def register(request):
     else:
         form=SignupForm()
         return render (request, 'signup.html', {"form":form})
+
+@login_required(login_url='/accounts/login/')
+def index(request):
+    posts=Image.objects.all()
+    comments=Comments.objects.all()
+    users=User.objects.exclude(id=request.user.id)
+    current_user=request.user
+
+    if request.method=='POST':
+        photoform=UploadPhotoForm(request.POST, request.FILES)
+        if photoform.is_valid():
+            photo=photoform.save(commit=False)
+            user=request.user
+            photo.save()
+            return HttpResponseRedirect(reverse("home"))
+        else:
+            photoform=UploadPhotoForm()
+        return render(request, 'index.html',{'photo':photo, 'photoform':photoform,'current_user':current_user, 'users':users, 'comments':comments, 'posts':posts})
+
 
 
