@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, Http404,HttpResponseRedirect
-from .forms import NewsLetterForm, SignupForm, UploadPhotoForm
+from .forms import NewsLetterForm, SignupForm, UpdateForm, UpdateProfileForm, UploadPhotoForm
 from .models import Comments, NewsLetterRecipients, Image
 from .email import send_welcome_email
 from django.contrib import messages
@@ -55,5 +55,17 @@ def index(request):
             photoform=UploadPhotoForm()
         return render(request, 'index.html',{'photo':photo, 'photoform':photoform,'current_user':current_user, 'users':users, 'comments':comments, 'posts':posts})
 
-
-
+@login_required(login_url='login')
+def profile(request,username):
+    photo=request.user.images.all()
+    if request.method=='POST':
+        form=UpdateForm(request.POST, instance=request.user.profile)
+        form1=UpdateProfileForm(request.POST, request.FILES, insance=request.user.profile)
+        if form.is_valid() and form1.is_valid():
+            form.save()
+            form1.save()
+            return HttpResponseRedirect(request.path_info)
+        else:
+            form=UpdateForm(instance=request.user)
+            form1=UpdateProfileForm()
+        return render (request, 'profile.html', {'form':form, 'form1':form1,'photo':photo})

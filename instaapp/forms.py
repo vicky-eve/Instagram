@@ -37,3 +37,7 @@ class CommentForm(forms.ModelForm):
         model = Comments
         fields = ('comment')
    
+class UpdateProfileForm(forms.ModeForm):
+    class Meta:
+        model = Profile
+        fields=('photo','bio')
