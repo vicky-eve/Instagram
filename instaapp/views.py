@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse, Http404,HttpResponseRedirect
 from .forms import NewsLetterForm, SignupForm
 from .models import NewsLetterRecipients
+from .email import send_welcome_email
+from django.contrib import messages
 
 # Create your views here.
 def news_today(request):
@@ -12,17 +14,23 @@ def news_today(request):
             email = form.cleaned_data['email']
             recipient = NewsLetterRecipients(name = name,email =email)
             recipient.save()
-            HttpResponseRedirect('news')
+            send_welcome_email(name,email)
+            HttpResponseRedirect('news_Today')
     else:
         form = NewsLetterForm()
     return render(request, 'news.html', {"letterForm":form})
 
 
-def sign_up(request):
-    if request.method=='POST':
+def register(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    if request.method=="POST":
         form=SignupForm(request.POST)
         if form.is_valid():
-            print('valid')
+            form.save()
+            username=form.cleaned_data.get('username')
+            messages.success(request,f'{username} you have successfully created your account')
+            return redirect ('login')
     else:
         form=SignupForm()
         return render (request, 'signup.html', {"form":form})
