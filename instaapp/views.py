@@ -6,6 +6,7 @@ from .email import send_welcome_email
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 # Create your views here.
 def news_today(request):
@@ -85,3 +86,13 @@ def comment(request, id):
         else:
             form=CommentForm()
         return render(request, 'comment.html', {'photo':photo, 'form':form, 'comments':comments})
+
+@login_required(login_url='login')
+def search(request):
+    profile=User.objects.all()
+    if 'username' in request.GET and request.GET['username']:
+        search_profile=request.GET.get('username')
+        profiles=User.objects.filter(username__icontains=search_profile)
+        print(profiles)
+        return render (request, 'search.html', locals())
+    return redirect(index)
