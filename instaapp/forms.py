@@ -22,7 +22,7 @@ class NewsLetterForm(forms.Form):
 class UploadPhotoForm(forms.ModelForm):
     class Meta:
         model = Image
-        fields = ['image', 'caption']
+        fields = ['image', 'name', 'caption']
 
 class UpdateForm(forms.ModelForm):
     email = forms.EmailField(max_length=100)

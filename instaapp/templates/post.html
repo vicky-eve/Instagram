@@ -1,0 +1,17 @@
+{%extends 'base.html'%} 
+{% load bootsrap5%}
+{% load crispy_forms_tags %}
+{%block content%}
+<div class="col-md-6">
+    <div id="regis">
+        <div class="form-data">
+            <h2 class="intro">New photo upload</h2>
+            <form action="{%url 'post'%}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button class="btn btn-warning" type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

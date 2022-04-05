@@ -26,7 +26,7 @@ def news_today(request):
 @login_required(login_url='/registration/register/')
 def signup(request):
     if request.user.is_authenticated:
-        return redirect('home')
+        return redirect('index')
     if request.method=="POST":
         form=SignupForm(request.POST)
         if form.is_valid():
@@ -38,33 +38,26 @@ def signup(request):
         form=SignupForm()
         return render (request, 'registration/registration_form.html', {"form":form})
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/registration/login/')
 def index(request):
+    """
+    displaying posts
+    """
     posts=Image.objects.all()
     comments=Comments.objects.all()
-    users=User.objects.exclude(id=request.user.id)
-    current_user=request.user
+    profiles=Profile.objects.all()
 
-    if request.method=='POST':
-        photoform=UploadPhotoForm(request.POST, request.FILES)
-        if photoform.is_valid():
-            photo=photoform.save(commit=False)
-            user=request.user
-            photo.save()
-            return HttpResponseRedirect(reverse("home"))
-        else:
-            photoform=UploadPhotoForm()
-        return render(request, 'index.html',{'photo':photo, 'photoform':photoform,'current_user':current_user, 'users':users, 'comments':comments, 'posts':posts})
+    return render(request, 'index.html', {"posts":posts, "comments":comments, "profiles":profiles})
 
 @login_required(login_url='registration/login/')
 def profile(request):
     current_user=(request.user)
-    images=Image.objects.filter(profile.current_user.id).all
+    images=Image.objects.filter(profile=current_user.id).all
     profile=Profile.objects.filter(user_id=current_user.id).first()
     return (request, 'registration/profile.html', {'images':images, 'profile':profile})
 
 @login_required(login_url='/accounts/login/')
-def update_profile(request,username):
+def update_profile(request):
     photo=request.user.images.all()
     if request.method=='POST':
         form=UpdateForm(request.POST, instance=request.user.profile)
