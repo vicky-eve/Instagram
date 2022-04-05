@@ -1,7 +1,7 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse, Http404,HttpResponseRedirect
 from .forms import CommentForm, NewsLetterForm, SignupForm, UpdateForm, UpdateProfileForm, UploadPhotoForm
-from .models import Comments, NewsLetterRecipients, Image, Profile
+from .models import Comments, NewsLetterRecipients, Image, Profile, Like, Comments
 from .email import send_welcome_email
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -87,20 +87,22 @@ def post(request):
     return render(request, 'post.html', {"form":form, })
 
 @login_required(login_url='/accounts/login/')
-def comment(request, id):
-    photo=Image.objects.get(id=id)
-    comments=Comments.objects.all()
-    if request.method=='POST':
-        form=CommentForm(request.POST)
+def comment(request,id):
+    post_comment = Comments.objects.filter(image= id)
+    image = Image.objects.filter(id=id).first()
+    current_user = request.user
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
         if form.is_valid():
-            comment_comment=form.save(commit=False)
-            comment_comment.image=photo
-            comment_comment.user = request.user.profile
-            comment_comment.save()
+            comment = form.save(commit = False)
+            comment.image = image
+            comment.user = current_user
+            comment.save()
             return HttpResponseRedirect(request.path_info)
-        else:
-            form=CommentForm()
-        return render(request, 'comment.html', {'photo':photo, 'form':form, 'comments':comments})
+    else:
+        form = CommentForm()
+
+    return render(request,'comment.html',{"form":form,"img":image,"comments":post_comment})
 
 @login_required(login_url='/accounts/login/')
 def search(request):
@@ -111,3 +113,16 @@ def search(request):
         print(profiles)
         return render (request, 'search.html', locals())
     return redirect(index)
+
+@login_required(login_url='/accounts/login/')
+def like_image(request, image_id):
+    image = get_object_or_404(Image,id = image_id)
+    like = Like.objects.filter(image = image ,user = request.user).first()
+    if like is None:
+        like = Like()
+        like.image = image
+        like.user = request.user
+        like.save()
+    else:
+        like.delete()
+    return redirect('index')

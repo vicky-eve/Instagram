@@ -1,8 +1,10 @@
 {%extends 'base.html'%}
-{% load static %}
 {% load bootstrap5 %}
-
+{% load static %}
 {% block styles %}
+{% bootstrap_css %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{%endblock%}
 {% block content %}
 
 <!-- upload new photo-->
@@ -19,7 +21,7 @@
                     <div class="card" style="width: 100%; height: 100%;">
                         <div class="img">
                             <a href="#{{image.id}}" data-toggle="modal" data-target="#{{image.id}}">
-                                <img class="card-img-top" style="width:100%;max-width:100%"src="{{image.image.url}}" class="img-responsive"
+                                <img class="card-img-top" style="width:100%;max-width:100%"src="{{image.posts.url}}" class="img-responsive"
                                     alt="{{image.name}}">
                             </a>
                         </div>
@@ -137,3 +139,4 @@
 
     </div>
     {%endblock%}
+    
