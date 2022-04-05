@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, Http404,HttpResponseRedirect
 from .forms import CommentForm, NewsLetterForm, SignupForm, UpdateForm, UpdateProfileForm, UploadPhotoForm
-from .models import Comments, NewsLetterRecipients, Image
+from .models import Comments, NewsLetterRecipients, Image, Profile
 from .email import send_welcome_email
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -23,7 +23,7 @@ def news_today(request):
         form = NewsLetterForm()
     return render(request, 'news.html', {"letterForm":form})
 
-
+@login_required(login_url='/registration/register/')
 def signup(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -36,7 +36,7 @@ def signup(request):
             return redirect ('login')
     else:
         form=SignupForm()
-        return render (request, 'signup.html', {"form":form})
+        return render (request, 'registration/registration_form.html', {"form":form})
 
 @login_required(login_url='/accounts/login/')
 def index(request):
@@ -56,8 +56,15 @@ def index(request):
             photoform=UploadPhotoForm()
         return render(request, 'index.html',{'photo':photo, 'photoform':photoform,'current_user':current_user, 'users':users, 'comments':comments, 'posts':posts})
 
-@login_required(login_url='login')
-def profile(request,username):
+@login_required(login_url='registration/login/')
+def profile(request):
+    current_user=(request.user)
+    images=Image.objects.filter(profile.current_user.id).all
+    profile=Profile.objects.filter(user_id=current_user.id).first()
+    return (request, 'registration/profile.html', {'images':images, 'profile':profile})
+
+@login_required(login_url='/accounts/login/')
+def update_profile(request,username):
     photo=request.user.images.all()
     if request.method=='POST':
         form=UpdateForm(request.POST, instance=request.user.profile)
@@ -69,9 +76,24 @@ def profile(request,username):
         else:
             form=UpdateForm(instance=request.user)
             form1=UpdateProfileForm()
-        return render (request, 'profile.html', {'form':form, 'form1':form1,'photo':photo})
+        return render (request, 'registrarion/update_profile.html', {'form':form, 'form1':form1,'photo':photo})
 
-@login_required(login_url='login')
+@login_required(login_url='/accounts/login')
+def post(request):
+    if request.method=='POST':
+        form=UploadPhotoForm(request.POST, request.FILES)
+        if form.is_valid():
+            image=form.save(commit=False)
+            image.profile=request.user
+            if 'image' in request.FILES:
+                image.image=request.FILES['image']
+            image.save()
+        return redirect('/')
+    else:
+        form=UploadPhotoForm()
+    return render(request, 'post.html', {"form":form, })
+
+@login_required(login_url='/accounts/login/')
 def comment(request, id):
     photo=Image.objects.get(id=id)
     comments=Comments.objects.all()
@@ -87,7 +109,7 @@ def comment(request, id):
             form=CommentForm()
         return render(request, 'comment.html', {'photo':photo, 'form':form, 'comments':comments})
 
-@login_required(login_url='login')
+@login_required(login_url='/accounts/login/')
 def search(request):
     profile=User.objects.all()
     if 'username' in request.GET and request.GET['username']:

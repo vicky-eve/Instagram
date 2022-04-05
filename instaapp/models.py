@@ -9,7 +9,7 @@ class Image(models.Model):
     name = models.CharField(max_length=250, blank=True)
     caption = models.CharField('Caption(optional)',max_length=300, blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
-    likes = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, related_name='likes',blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='images')
 
     def __str__(self):
@@ -28,7 +28,7 @@ class Image(models.Model):
 
 class Profile(models.Model):
     bio = models.TextField(max_length=500, default='Bio', blank=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     photo = models.ImageField(upload_to='images/')
 
     @receiver(post_save, sender=User)
@@ -75,3 +75,13 @@ class Comments(models.Model):
 class NewsLetterRecipients(models.Model):
     name = models.CharField(max_length = 30)
     email = models.EmailField()
+
+class Like(models.Model):
+    image=models.ForeignKey(Image,on_delete=models.CASCADE, related_name='upvotes')
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    def str(self):
+        return self.image
+    class Meta:
+        constraints=[
+            models.UniqueConstraint(fields=['user', 'image'] , name="unique_like"),
+        ]

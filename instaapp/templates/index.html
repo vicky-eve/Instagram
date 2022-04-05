@@ -1,0 +1,139 @@
+{%extends 'base.html'%}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block styles %}
+{% block content %}
+
+<!-- upload new photo-->
+<div class="container">
+
+    <h1 style="text-align:center">Instagram</h1>
+
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            {% for image in posts %}
+            <div class="row">
+                <div class="col-md-12 showpost">
+                    <div class="card" style="width: 100%; height: 100%;">
+                        <div class="img">
+                            <a href="#{{image.id}}" data-toggle="modal" data-target="#{{image.id}}">
+                                <img class="card-img-top" style="width:100%;max-width:100%"src="{{image.image.url}}" class="img-responsive"
+                                    alt="{{image.name}}">
+                            </a>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="modal fade" id="{{image.id}}" role="dialog">
+                                <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">{{image.name}}</h4>
+                                            <img src="{{image.image.url}}" class="img-responsive" alt="Image"
+                                                style="width:100%;max-width:100%">
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-justify"><b>Caption:</b> {{image.caption}}</p>
+                                            <p class="text-left"><b>Likes:</b> {{image.upvotes.all|length}}</p>
+                                           
+    
+                                        </div>
+                                        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 padding-1">
+                                            <input id="{{image.id}}-url" class="form-control input-md responsive" type="text"
+                                                value="{{image.image.url}}">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+    
+                                </div>
+                            </div>
+    
+                        </div>
+
+                        <div>
+                            <div>
+                                <h4 class="card-title"><span class="" style="font-weight: 700;">Caption: </span>
+                                    {{image.caption}}
+                                </h4>
+                            </div>
+                            <div style="float: right;">
+                                <h4>Likes: {{image.upvotes.all|length}}</h4> <span> </span>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="card-block">
+                            <br>
+                            <a href="{%url 'like_image' image.id %}"><img src="https://img.icons8.com/material-outlined/24/000000/filled-like.png"/></a>
+                            <a href="{%url 'comment' image.id %}"><img src="https://img.icons8.com/material-outlined/24/000000/speech-bubble--v2.png"/></a>
+                            <img src="https://img.icons8.com/windows/32/000000/filled-sent.png" />
+                        </div>
+                        
+                        <div>
+                            <a href="{%url 'comment' image.id %}" class="pl-3">
+                                Comments
+                                <hr>
+                            </a>
+                            
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+            <div class="showprofile">
+                <h1 style="font-weight: 700;"> {{user.username}} Profile</h1>
+                <hr>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="img">
+                            <div class="profile_pic" class="rounded-circle">
+                                <img style="width:100%;max-width:100%"src="{{user.profile.profile_pic.url }}" alt="profile_photo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h3 style="font-weight: 700;"><a href="{% url 'profile' %}">{{user.username}}</a></h3>
+                        <b>{{user.profile.bio}}</b>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <b style="font-size:10pt;">Following </b>
+                    </div>
+                    <div class="col-md-6">
+                        <b style="font-size:10pt;">Followers </b>
+    
+                    </div>
+                </div>
+                <hr>
+            </div>
+    
+            <div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <b style="font-size:15pt; color:rgb(31, 88, 53)">Write New Post </b>
+                    </div>
+                    <div class="col-md-6">
+                        <a class="btn btn-info newpost" href="{% url 'post' %}"><img
+                                src="https://img.icons8.com/ios-glyphs/30/000000/multi-edit.png" /></a>
+                    </div>
+                </div>
+                <hr>
+            </div>
+    
+        </div>
+
+    </div>
+    {%endblock%}

@@ -6,9 +6,8 @@ from emoji_picker.widgets import EmojiPickerTextareaAdmin
 
 
 class SignupForm(UserCreationForm):
-    username = forms.CharField(label='User_ame',max_length=30)
     email = forms.EmailField(label='Email')
-    password = forms.PasswordInput(label='Password')
+    
     
     class Meta:
         model = User
@@ -29,15 +28,15 @@ class UpdateForm(forms.ModelForm):
     email = forms.EmailField(max_length=100)
     class Meta:
         model = User
-        fiels = ('username', 'email')
+        fields = ('username', 'email')
 
 class CommentForm(forms.ModelForm):
     comment = forms.CharField(widget=EmojiPickerTextareaAdmin)
     class Meta:
         model = Comments
-        fields = ('comment')
+        fields = ('comment',)
    
-class UpdateProfileForm(forms.ModeForm):
+class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields=('photo','bio')
