@@ -2,7 +2,7 @@ from email.mime import image
 from django import forms
 from .models import User, Image, Profile, Comments, Follow
 from django.contrib.auth.forms import UserCreationForm
-from emoji_picker.widgets import EmojiPickerTextareaAdmin
+
 
 
 class SignupForm(UserCreationForm):
