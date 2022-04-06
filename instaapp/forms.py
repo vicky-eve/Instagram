@@ -31,7 +31,7 @@ class UpdateForm(forms.ModelForm):
         fields = ('username', 'email')
 
 class CommentForm(forms.ModelForm):
-    comment = forms.CharField(widget=EmojiPickerTextareaAdmin)
+    comment = forms.CharField(max_length=200)
     class Meta:
         model = Comments
         fields = ('comment',)
