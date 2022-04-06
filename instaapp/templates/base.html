@@ -4,7 +4,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-
+   <!-- FAVIVON -->
+   <link rel="shortcut icon" href="./images/favicon.png" type="image/png">
   {% if title %}
   <title>Instagram - {{title}}</title>
   {% else %}
@@ -19,7 +20,7 @@
 </head>
 <body>
     {% include "navbar.html" %}
-
+      
     {% block content %} <h1 class='text-center'>Gallery for {{date|date:"l d-F Y"}}</h1> {%endblock%}
 
     {% block scripts %}

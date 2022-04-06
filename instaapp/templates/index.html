@@ -21,7 +21,7 @@
                     <div class="card" style="width: 100%; height: 100%;">
                         <div class="img">
                             <a href="#{{image.id}}" data-toggle="modal" data-target="#{{image.id}}">
-                                <img class="card-img-top" style="width:100%;max-width:100%"src="{{image.posts.url}}" class="img-responsive"
+                                <img class="card-img-top" style="width:100%;max-width:100%"src="{{image.image.url}}" class="img-responsive"
                                     alt="{{image.name}}">
                             </a>
                         </div>
@@ -36,8 +36,8 @@
                                                 style="width:100%;max-width:100%">
                                         </div>
                                         <div class="modal-body">
-                                            <p class="text-justify"><b>Caption:</b> {{image.caption}}</p>
-                                            <p class="text-left"><b>Likes:</b> {{image.upvotes.all|length}}</p>
+                                            <p class="text-justify"><b></b> {{image.caption}}</p>
+                                            <p class="text-left"><b></b> {{image.upvotes.all|length}}</p>
                                            
     
                                         </div>
