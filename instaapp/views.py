@@ -102,7 +102,7 @@ def comment(request,id):
     else:
         form = CommentForm()
 
-    return render(request,'comment.html',{"form":form,"img":image,"comments":post_comment})
+    return render(request,'comment.html',{"form":form,"image":image,"comments":post_comment})
 
 @login_required(login_url='/accounts/login/')
 def search(request):
