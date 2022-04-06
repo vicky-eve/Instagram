@@ -2,10 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 class Image(models.Model):
-    image = models.ImageField(upload_to='images/')
+    image = CloudinaryField('images')
     name = models.CharField(max_length=250, blank=True)
     caption = models.CharField('Caption(optional)',max_length=300, blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
@@ -63,7 +64,7 @@ class Follow(models.Model):
 class Comments(models.Model):
     comment = models.TextField(max_length = 500)
     image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, related_name='comments')
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     date_comment_posted = models.DateTimeField(auto_now_add=True)
 
     class Meta:
