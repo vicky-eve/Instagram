@@ -78,8 +78,8 @@ def post(request):
         if form.is_valid():
             image=form.save(commit=False)
             image.profile=request.user
-            if 'image' in request.FILES:
-                image.image=request.FILES['image']
+            if 'photo' in request.FILES:
+                image.image=request.FILES['photo']
             image.save()
         return redirect('/')
     else:
